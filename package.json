@@ -1,0 +1,23 @@
+{
+  "name": "my-library",
+  "version": "1.0.0",
+  "description": "function library",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vv314/my-library.git"
+  },
+  "author": "Vincent Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vv314/my-library/issues"
+  },
+  "homepage": "https://github.com/vv314/my-library#readme"
+}
