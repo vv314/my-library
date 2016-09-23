@@ -292,5 +292,17 @@ var Fish = {
    */
   redirect: function(url) {
     window.location.href = url;
+  },
+
+  /**
+   * 数组分块
+   * @param  {Array} arr  原数组
+   * @param  {Number} size 分割大小
+   * @return {Array}      分块新数组
+   */
+  chunk: function(arr, size) {
+    return (function slice(nArr, i) {
+      return nArr.push(arr.slice(i, i += size)) && i >= arr.length ? nArr : slice(nArr, i);
+    })([], 0);
   }
 };
