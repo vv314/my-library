@@ -19,5 +19,6 @@
   "bugs": {
     "url": "https://github.com/vv314/my-library/issues"
   },
-  "homepage": "https://github.com/vv314/my-library#readme"
+  "homepage": "https://github.com/vv314/my-library#readme",
+  "devDependencies": {}
 }

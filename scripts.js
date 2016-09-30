@@ -47,7 +47,7 @@ var Fish = {
   delCookie: function(name) {
     var exp = new Date();
     exp.setTime(exp.getTime() - 1);
-    var cval = getCookie(name);
+    var cval = this.getCookie(name);
     if (cval !== null) {
       document.cookie = name + '=' + cval + ';expires=' + exp.toGMTString();
     }
@@ -136,6 +136,7 @@ var Fish = {
   serverTime: function(fn) {
     var xhr = new XMLHttpRequest();
     if (!xhr) {
+      /* global ActiveXObject */
       xhr = new ActiveXObject('Microsoft.XMLHTTP');
     }
     xhr.open('HEAD', location.href, true);
@@ -153,7 +154,7 @@ var Fish = {
    */
   emptyValid: function ($inputs) {
     for (var item in $inputs) {
-      if ($data[item].val() === '') {
+      if ($inputs[item].val() === '') {
         alert('请输入' + item);
         return true;
       }
@@ -274,6 +275,7 @@ var Fish = {
    */
   initMap: function (option) {
     var zoom = option.zoom || 15;
+    /* global BMap */
     var map = new BMap.Map(option.id);
     var point = new BMap.Point(option.y, option.x);
     map.centerAndZoom(point, zoom);
@@ -304,5 +306,21 @@ var Fish = {
     return (function slice(nArr, i) {
       return nArr.push(arr.slice(i, i += size)) && i >= arr.length ? nArr : slice(nArr, i);
     })([], 0);
+  },
+
+  /**
+   * 判断字符串、数组、对象是否为空
+   * @param  {String | Obejct}  obj 数据源
+   * @return {Boolean}     结果
+   */
+  isEmpty: function(obj) {
+    switch(typeof obj) {
+      case 'undefined': return true;
+      case 'string': return !obj.length;
+      case 'object': return function isEmptyObj(obj) {
+        return obj === null || !(Array.isArray(obj)? obj.length : Object.getOwnPropertyNames(obj).length);
+      }(obj);
+    }
   }
+
 };
