@@ -1,9 +1,9 @@
 var Fish = {
   /**
    * 返回指定精度整型随机数
-   * @param  {[int]} min 左边距
-   * @param  {[int]} max 右边距
-   * @return {[int]}     
+   * @param  {Number} min 左边距
+   * @param  {Number} max 右边距
+   * @return {Number}   指定范围随机数
    */
   random: function(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -11,7 +11,7 @@ var Fish = {
 
   /**
    * 选择器
-   * @return {Element}          匹配元素
+   * @return {Element} 匹配元素
    */
   q: function() {
     return document.querySelector.apply(document, arguments);
@@ -103,9 +103,8 @@ var Fish = {
    * @return {String}      参数值
    */
   getUrlParam: function(name) {
-    var reg, value;
-    reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-    value = window.location.search.substr(1).match(reg);
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)'),
+        value = window.location.search.substr(1).match(reg);
     return value === null ? null : decodeURI(value[2]);
   },
 
@@ -161,6 +160,11 @@ var Fish = {
     }
   },
 
+  /**
+   * 获取UA特征字符串，判断是否包含指定信息
+   * @param  {String}  appStr 特征字符串
+   * @return {Boolean}        
+   */
   isApp: function (appStr) {
     var ua = navigator.userAgent.toLowerCase();
     return Debug ? true : (ua.indexOf(appStr) < 0 ? false : true);
@@ -172,9 +176,9 @@ var Fish = {
 
   /**
    * 轮询
-   * @param  {Function}   conditionFn  条件函数
-   * @param  {Function} callback    回调函数
-   * @param  {Number} spend    间隔时间
+   * @param  {Function}  conditionFn  条件函数
+   * @param  {Function}  callback    回调函数
+   * @param  {Number}    spend    间隔时间
    */
   polling: function (conditionFn, callback, spend) {
     var t = spend || 200;
@@ -189,7 +193,7 @@ var Fish = {
   },
 
   /**
-   * 设置/获取localStorage
+   * 设置/获取 localStorage
    * 当value缺省时为获取数据, value为对象时执行序列化
    * @param  {String} name  数据名
    * @param  {String} value 数据项
@@ -271,7 +275,6 @@ var Fish = {
    * @param  {Number} x 经度
    * @param  {Number} y 纬度
    * @param  {Number} zoom 放大倍数
-   * @return 
    */
   initMap: function (option) {
     var zoom = option.zoom || 15;
@@ -288,9 +291,8 @@ var Fish = {
   },
 
   /**
-   * 普通跳转
-   * @param  {String} url 页面url
-   * @return {[type]}     [description]
+   * 重定向
+   * @param  {String} url 目标url
    */
   redirect: function(url) {
     window.location.href = url;
@@ -300,7 +302,7 @@ var Fish = {
    * 数组分块
    * @param  {Array} arr  原数组
    * @param  {Number} size 分割大小
-   * @return {Array}      分块新数组
+   * @return {Array}      分块结果以新数组返回
    */
   chunk: function(arr, size) {
     return (function slice(nArr, i) {
@@ -311,7 +313,7 @@ var Fish = {
   /**
    * 判断字符串、数组、对象是否为空
    * @param  {String | Obejct}  obj 数据源
-   * @return {Boolean}     结果
+   * @return {Boolean}    
    */
   isEmpty: function(obj) {
     switch(typeof obj) {
@@ -321,6 +323,39 @@ var Fish = {
         return obj === null || !(Array.isArray(obj)? obj.length : Object.getOwnPropertyNames(obj).length);
       }(obj);
     }
-  }
+  },
+
+  /**
+   * 应用状态管理，基于sesstionStorage
+   * @param  {String} method  方法名
+   * @return {Function}       操作方法
+   */
+  eux: function(method) {
+    var self = this, 
+        flag = 'eux';
+    return {
+      add: function(state) {
+        var val = self.sessionStorage(flag) || {};
+        val[state] = 1;
+        self.sessionStorage(flag, val);
+      },
+      has: function(state) {
+        var val = self.sessionStorage(flag) || {};
+        return state in val;
+      },
+      remove: function(state) {
+        var val = self.sessionStorage(flag);
+        if (val) {
+          delete val[state];
+          self.sessionStorage(flag, val);
+        }
+      },
+      clear: (function() {
+        self.sessionStorage(flag, {});
+      })()
+    }[method];
+  },
+
+
 
 };
