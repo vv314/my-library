@@ -356,6 +356,55 @@ var Fish = {
     }[method];
   },
 
+  /**
+   * 设置title，兼容微信
+   * @param  {String} title 页面标题
+   * @return {Context}       上下文
+   */
+  title: function(title) {
+    if (this.isWechat()) {
+      // hack在微信等webview中无法修改document.title的情况
+      document.title = title;
+      var $iframe = $('<iframe src="/favicon.ico"></iframe>').on('load', function() {
+        setTimeout(function() {
+          $iframe.off('load').remove();
+        }, 0);
+      }).appendTo('body');
+    } else {
+      document.title = title;
+    }
+    return this;
+  },
 
+  /**
+   * 获取当前时间
+   * @return {String} yyyy-mm-dd
+   */
+  getDate: function () {
+    var now = new Date(),
+        fm = function(v) {return v<10?('0'+v):v};
+    var date = [
+      now.getFullYear(),
+      fm(now.getMonth() + 1),
+      fm(now.getDate())
+    ];
+    return date.join('-');
+  },
+
+  /**
+   * 比较版本号大小
+   * @param  {String}  currVer   当前版本号
+   * @param  {String}  targetVer 目标版本号
+   * @return {Boolean}           结果
+   */
+  isNewVer: function (currVer, targetVer) {
+    var cvArr = currVer.split('.'), 
+        tvArr = targetVer.split('.');
+    if(currVer === targetVer) return true;
+    for(var i=0; i<3; i++) {
+      if(cvArr[i] != tvArr[i]) return cvArr[i] > tvArr[i];
+    }
+    return true;
+  }
 
 };
