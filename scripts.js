@@ -319,9 +319,7 @@ var Fish = {
     switch(typeof obj) {
       case 'undefined': return true;
       case 'string': return !obj.length;
-      case 'object': return function isEmptyObj(obj) {
-        return obj === null || !(Array.isArray(obj)? obj.length : Object.getOwnPropertyNames(obj).length);
-      }(obj);
+      case 'object': return obj === null || !Object.keys(obj).length;
     }
   },
 
@@ -332,20 +330,18 @@ var Fish = {
    */
   eux: function(method) {
     var self = this, 
-        flag = 'eux';
+        flag = 'eux',
+        val = this.sessionStorage(flag) || {};
     return {
       add: function(state) {
-        var val = self.sessionStorage(flag) || {};
         val[state] = 1;
         self.sessionStorage(flag, val);
       },
       has: function(state) {
-        var val = self.sessionStorage(flag) || {};
         return state in val;
       },
       remove: function(state) {
-        var val = self.sessionStorage(flag);
-        if (val) {
+        if (Object.keys(val).length) {
           delete val[state];
           self.sessionStorage(flag, val);
         }
@@ -383,12 +379,7 @@ var Fish = {
   getDate: function () {
     var now = new Date(),
         fm = function(v) {return v<10?('0'+v):v};
-    var date = [
-      now.getFullYear(),
-      fm(now.getMonth() + 1),
-      fm(now.getDate())
-    ];
-    return date.join('-');
+    return [now.getFullYear(), fm(now.getMonth() + 1), fm(now.getDate())].join('-');
   },
 
   /**
