@@ -4,6 +4,7 @@ var Fish = {
    * @param  {Number} min 左边距
    * @param  {Number} max 右边距
    * @return {Number}   指定范围随机数
+   * random(1, 3)  // 1 | 2 | 3
    */
   random: function(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -12,15 +13,22 @@ var Fish = {
   /**
    * 选择器
    * @return {Element} 匹配元素
+   * e.g.
+   * q('.name')  // Element
+   * q('.name', '.profile')  // Element
    */
   q: function() {
     return document.querySelector.apply(document, arguments);
   },
 
   /**
-   * 获取Cookie
-   * @param  {String} name cookie名称
+   * 获取 Cookie
+   * @param  {String} name  cookie名称
    * @return {String} 
+   * e.g.
+   * // cookie: name=fish
+   * getCookie('name')  // fish
+   * getCookie('age')  // ''
    */
   getCookie: function(name) {
     var reg, value;
@@ -30,8 +38,8 @@ var Fish = {
   },
 
   /**
-   * 设置Cookie
-   * @param {String} name cookie名
+   * 设置 Cookie
+   * @param {String} name  cookie名称
    */
   setCookie: function(name, value) {
     var Days = 15; // 有效期1天
@@ -41,8 +49,8 @@ var Fish = {
   },
 
   /**
-   * 删除Cookie
-   * @param {String} name cookie名
+   * 删除 Cookie
+   * @param {String} name  cookie名称
    */
   delCookie: function(name) {
     var exp = new Date();
@@ -55,8 +63,10 @@ var Fish = {
 
   /**
    * 邮箱验证
-   * @param  {String} email email地址
-   * @return {Boolean}
+   * @param  {String} email  email地址
+   * @return {Boolean}  验证结果
+   * e.g.
+   * vaildEmail('vv314@foxmail.com')  // true
    */
   vaildEmail: function(email) {
     var emailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -89,7 +99,10 @@ var Fish = {
 
   /**
    * 替换\n换行符
-   * @param  {String} selector 元素id
+   * @param  {String} selector  元素id
+   * e.g.
+   * // <div class="text">hello\nfish</div>
+   * replaceToBr('div.text')  // hello<br>fish
    */
   replaceToBr: function(selector) {
     var ele = this.q(selector),
@@ -101,6 +114,10 @@ var Fish = {
    * 获取url参数
    * @param  {String} name 参数名
    * @return {String}      参数值
+   * e.g.
+   * // http://www.vv314.com?type=1&id=1
+   * getUrlParam('id')  // 1
+   * getUrlParam('name')  // null
    */
   getUrlParam: function(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)'),
@@ -120,17 +137,18 @@ var Fish = {
   /**
    * 字符串超出截取，以省略号结尾
    * @param  {String} str    待截取字符串
-   * @param  {Number} length 长度
+   * @param  {Number} maxlength 长度
    * @return {String}        截取结果
+   * e.g.
+   * limitStr('abcdefg', 4) // abcd...
    */
-  limitStr: function(str, length) {
-    return str.length > length ? (str.substr(0, length) + '...') : str;
+  limitStr: function(str, maxlength) {
+    return str.length > maxlength ? (str.substr(0, maxlength) + '...') : str;
   },
 
   /**
    * 获取服务器时间
    * @param  {Function} fn 回调函数
-   * @return 
    */
   serverTime: function(fn) {
     var xhr = new XMLHttpRequest();
@@ -148,7 +166,7 @@ var Fish = {
   },
 
   /**
-   * input空值验证
+   * input 空值验证
    * @param {jQuery Object} $inputs input对象
    */
   emptyValid: function ($inputs) {
@@ -161,7 +179,7 @@ var Fish = {
   },
 
   /**
-   * 获取UA特征字符串，判断是否包含指定信息
+   * 获取 UA 特征字符串，判断是否包含指定信息
    * @param  {String}  appStr 特征字符串
    * @return {Boolean}        
    */
@@ -170,6 +188,10 @@ var Fish = {
     return Debug ? true : (ua.indexOf(appStr) < 0 ? false : true);
   },
 
+  /**
+   * 封装console.log()
+   * @return {[type]} [description]
+   */
   log: function() {
     Debug && console.log.apply(console, arguments);
   },
@@ -194,9 +216,11 @@ var Fish = {
 
   /**
    * 设置/获取 localStorage
-   * 当value缺省时为获取数据, value为对象时执行序列化
+   * 当 value 缺省时为获取数据, value 为对象时执行序列化
    * @param  {String} name  数据名
    * @param  {String} value 数据项
+   * e.g.
+   * 
    */
   storage: function(name, value) {
     var data = '';
@@ -212,6 +236,14 @@ var Fish = {
     }
   },
 
+  /**
+   * 设置/获取 sessionStorage
+   * 当 value 缺省时为获取数据, value 为对象时执行序列化
+   * @param  {String} name  数据名
+   * @param  {String} value 数据项
+   * e.g.
+   * 同 localStorage
+   */
   sessionStorage: function(name, value) {
     var data = '';
     if (typeof(value) === 'undefined') {
@@ -258,8 +290,11 @@ var Fish = {
    * 分隔价格，生成小样式
    * @param  {Nunber} price 价格
    * @return {String}       结果
+   * e.g.
+   * splitPrice(12)  // <span>12</span><span>.00</span>
+   * splitPrice(12.99)  // <span>12</span><span>.99</span>
    */
-  splitPrice: function(price, decimal) {
+  splitPrice: function(price) {
     var pArr = String(price).split('.');
     var res = '￥';
     if (pArr.length > 1) {
@@ -286,6 +321,13 @@ var Fish = {
     map.addOverlay(marker); // 将标注添加到地图中    
   },
 
+  /**
+   * 判断是否为数组
+   * @param  {Object}  a 数据
+   * @return {Boolean}   判断结果
+   * e.g.
+   * isArray([1, 3])  // true
+   */
   isArray: function(a) {
     return Array.isArray ? Array.isArray(a) : Object.prototype.toString.call(a) === '[object Array]';
   },
@@ -303,6 +345,8 @@ var Fish = {
    * @param  {Array} arr  原数组
    * @param  {Number} size 分割大小
    * @return {Array}      分块结果以新数组返回
+   * e.g.
+   * chunk([1, 2, 3, 4, 5], 3)  // [[1, 2, 3], [4, 5]]
    */
   chunk: function(arr, size) {
     return (function slice(nArr, i) {
@@ -311,9 +355,14 @@ var Fish = {
   },
 
   /**
-   * 判断字符串、数组、对象是否为空
-   * @param  {String | Obejct}  obj 数据源
-   * @return {Boolean}    
+   * 判断字符串、数组、对象内容是否为空
+   * @param  {String | Obejct}  obj  数据源
+   * @return {Boolean}  判断结果
+   * e.g.
+   * isEmpty('')  // true
+   * isEmpty([])  // true
+   * isEmpty({})  // true
+   * isEmpty({name: 'fish'})  // false
    */
   isEmpty: function(obj) {
     switch(typeof obj) {
@@ -327,15 +376,22 @@ var Fish = {
    * 应用状态管理，基于sesstionStorage
    * @param  {String} method  方法名
    * @return {Function}       操作方法
+   * e.g.
+   * eux('add')('login')  // eux: {login: 1}
+   * eux('add')('login')('new')  // eux: {login: 1, new: 1}
+   * eux('has')('login')  // true
+   * eux('remove')('new')  // eux: {login: 1}
+   * eux('clear')  // eux: {}
    */
   eux: function(method) {
     var self = this, 
         flag = 'eux',
         val = this.sessionStorage(flag) || {};
     return {
-      add: function(state) {
+      add: function add(state) {
         val[state] = 1;
         self.sessionStorage(flag, val);
+        return add;
       },
       has: function(state) {
         return state in val;
@@ -353,13 +409,13 @@ var Fish = {
   },
 
   /**
-   * 设置title，兼容微信
+   * 设置 title，兼容微信
    * @param  {String} title 页面标题
    * @return {Context}       上下文
    */
   title: function(title) {
     if (this.isWechat()) {
-      // hack在微信等webview中无法修改document.title的情况
+      // hack 在微信等 webview 中无法修改 document.title 的情况
       document.title = title;
       var $iframe = $('<iframe src="/favicon.ico"></iframe>').on('load', function() {
         setTimeout(function() {
@@ -374,12 +430,22 @@ var Fish = {
 
   /**
    * 获取当前时间
-   * @return {String} yyyy-mm-dd
+   * @param  {Number}  [addDayCount]  日期增量，支持负数
+   * @return {String} yyyy-MM-dd
+   * e.g.
+   * getDate()  // 2016-10-08
+   * getDate(1)  // 2016-10-09
+   * getDate(-2)  // 2016-10-06
    */
-  getDate: function () {
+  getDate: function(addDayCount) {
     var now = new Date(),
         fm = function(v) {return v<10?('0'+v):v};
-    return [now.getFullYear(), fm(now.getMonth() + 1), fm(now.getDate())].join('-');
+    now.setDate(now.getDate() + (isNaN(Number(addDayCount))?0:+addDayCount));
+    return [
+      now.getFullYear(),
+      fm(now.getMonth() + 1),
+      fm(now.getDate())
+    ].join('-');
   },
 
   /**
@@ -387,6 +453,10 @@ var Fish = {
    * @param  {String}  currVer   当前版本号
    * @param  {String}  targetVer 目标版本号
    * @return {Boolean}           结果
+   * e.g.
+   * isNewVer('1.2.0', '1.2.4')  // false
+   * isNewVer('1.3.0', '1.2.4')  // true
+   * isNewVer('1.2.4', '1.2.4')  // true
    */
   isNewVer: function (currVer, targetVer) {
     var cvArr = currVer.split('.'), 
@@ -396,6 +466,34 @@ var Fish = {
       if(cvArr[i] != tvArr[i]) return cvArr[i] > tvArr[i];
     }
     return true;
+  }
+
+  /**
+   * 向 DOM 元素内追加 html 内容
+   * @param  {DOM} ele  元素容器
+   * @param  {String} html html字符串
+   * e.g.
+   * append(documnet.getElementById('main'), '<div>hello fish</div>')
+   */
+  append: function (ele, html) {
+    if(typeof(ele) === 'object' && ele.nodeType === 1) {
+      ele.insertAdjacentHTML('beforeend', html);
+    } else {
+      query(ele)[0].insertAdjacentHTML('beforeend', html);
+    }
+  },
+  
+  /**
+   * 判断是否为数字或数字字符串
+   * @param  {Number | String} 数据 
+   * @return {Boolean}       判断结果
+   * e.g.
+   * likeNumber(5)  // true
+   * likeNumber('8')  // true
+   * likeNumber('2a')  // false
+   */
+  likeNumber: function(value) {
+    return !isNaN(Number(value));
   }
 
 };
