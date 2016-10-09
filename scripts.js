@@ -216,15 +216,16 @@ var Fish = {
 
   /**
    * 设置/获取 localStorage
-   * 当 value 缺省时为获取数据, value 为对象时执行序列化
+   * 当 value 缺省时为获取数据, value 为对象时,执行序列化
    * @param  {String} name  数据名
-   * @param  {String} value 数据项
+   * @param  {String} [value] 数据项
    * e.g.
-   * 
+   * storage('goodid')  // xxx
+   * storage('profile', {name: fish, gender: 1})  // profile: '{name: fish, gender: 1}'
    */
   storage: function(name, value) {
     var data = '';
-    if (typeof(value) === 'undefined') {
+    if (arguments.length == 1) {
       data = localStorage.getItem(name);
       try {
         return JSON.parse(data);
@@ -246,7 +247,7 @@ var Fish = {
    */
   sessionStorage: function(name, value) {
     var data = '';
-    if (typeof(value) === 'undefined') {
+    if (arguments.length == 1) {
       data = sessionStorage.getItem(name);
       try {
         return JSON.parse(data);
@@ -387,8 +388,10 @@ var Fish = {
     var self = this, 
         flag = 'eux',
         val = this.sessionStorage(flag) || {};
+    if(method == 'clear') return this.sessionStorage(flag, {});
     return {
       add: function add(state) {
+        if(typeof(state) == 'object') throw new Error('key mast be string');
         val[state] = 1;
         self.sessionStorage(flag, val);
         return add;
@@ -397,14 +400,12 @@ var Fish = {
         return state in val;
       },
       remove: function(state) {
+        var val = self.sessionStorage(flag);
         if (Object.keys(val).length) {
           delete val[state];
           self.sessionStorage(flag, val);
         }
-      },
-      clear: (function() {
-        self.sessionStorage(flag, {});
-      })()
+      }
     }[method];
   },
 
@@ -466,7 +467,7 @@ var Fish = {
       if(cvArr[i] != tvArr[i]) return cvArr[i] > tvArr[i];
     }
     return true;
-  }
+  },
 
   /**
    * 向 DOM 元素内追加 html 内容
